@@ -1,6 +1,7 @@
 package hxd.rpc.transport;
 
 import hxd.rpc.entry.RpcRequest;
+import hxd.rpc.entry.RpcResponse;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -24,7 +25,6 @@ public class RpcClientProxy implements InvocationHandler {
 
     /**
      * 由于在客户端层面没有具体实现类，通过动态代理生成需要的RpcRquest对象发给服务端，通过传递host和port来指定服务端地址
-     *
      */
     @SuppressWarnings("unchecked")
     public <T> T getProxy(Class<T> clazz){
@@ -33,13 +33,13 @@ public class RpcClientProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        RpcRequest request = RpcRequest.builder()
+        RpcRequest rpcRequest = RpcRequest.builder()
                 .interfaceName(method.getDeclaringClass().getName())
                 .methodName(method.getName())
                 .parameters(args)
                 .paramType(method.getParameterTypes())
                 .build();
         RpcClient rpcClient = new RpcClient();
-        return null;
+        return ((RpcResponse) rpcClient.sendRequest(rpcRequest, host, port)).getData();
     }
 }
