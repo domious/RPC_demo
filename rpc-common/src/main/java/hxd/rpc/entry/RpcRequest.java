@@ -3,14 +3,16 @@ package hxd.rpc.entry;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author huxiaodong
  */
 @Data
 @Builder
-public class RpcRequest {
+public class RpcRequest implements Serializable {
 
-    private String requestId;
+    //private String requestId;
 
     /**
      * 待调用接口名称

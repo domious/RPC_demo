@@ -4,8 +4,10 @@ import hxd.rpc.entry.RpcRequest;
 import hxd.rpc.entry.RpcResponse;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -40,8 +42,7 @@ public class RpcServer {
             log.error("连接时发生错误：", e);
         }
     }
-
-    static class WorkerThread implements Runnable {
+   static class WorkerThread implements Runnable {
 
         Socket socket;
         //需要调用的服务
@@ -55,16 +56,17 @@ public class RpcServer {
         @Override
         public void run() {
             try (ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())){
-
+                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())) {
                 RpcRequest rpcRequest = (RpcRequest) objectInputStream.readObject();
                 Method method = service.getClass().getMethod(rpcRequest.getMethodName(), rpcRequest.getParamType());
                 Object returnObject = method.invoke(service, rpcRequest.getParameters());
                 objectOutputStream.writeObject(RpcResponse.success(returnObject));
                 objectOutputStream.flush();
-            }catch (Exception e){
-                log.error("调用或发送时发生错误：", e);
+            } catch (IOException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                log.error("调用或发送时有错误发生：", e);
             }
         }
     }
 }
+
+
