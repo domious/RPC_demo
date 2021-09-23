@@ -1,14 +1,8 @@
 package hxd.rpc.transport;
 
-import hxd.rpc.entry.RpcRequest;
-import hxd.rpc.entry.RpcResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.*;
@@ -36,16 +30,16 @@ public class RpcServer {
             Socket socket;
             while ((socket = serverSocket.accept()) != null) {
                 log.info("客户端连接，其ip为：" + socket.getInetAddress());
-                threadPool.execute(new WorkerThread(socket, service));
+                threadPool.execute();
             }
         } catch (Exception e) {
-            log.error("连接时发生错误：", e);
+            e.printStackTrace();
         }
     }
-   static class WorkerThread implements Runnable {
+
+    class WorkerThread implements Runnable {
 
         Socket socket;
-        //需要调用的服务
         Object service;
 
         public WorkerThread(Socket socket, Object service) {
@@ -55,18 +49,9 @@ public class RpcServer {
 
         @Override
         public void run() {
-            try (ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())) {
-                RpcRequest rpcRequest = (RpcRequest) objectInputStream.readObject();
-                Method method = service.getClass().getMethod(rpcRequest.getMethodName(), rpcRequest.getParamType());
-                Object returnObject = method.invoke(service, rpcRequest.getParameters());
-                objectOutputStream.writeObject(RpcResponse.success(returnObject));
-                objectOutputStream.flush();
-            } catch (IOException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                log.error("调用或发送时有错误发生：", e);
+            try (){
+
             }
         }
     }
 }
-
-
