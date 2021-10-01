@@ -13,10 +13,11 @@ import java.lang.reflect.Proxy;
  */
 public class RpcClientProxy implements InvocationHandler {
 
-    private String host;
-    private int port;
+    private final String host;
 
-    //private final RpcClient rpcClient;
+    private final int port;
+
+
 
     public RpcClientProxy(String host, int port) {
         this.host = host;
