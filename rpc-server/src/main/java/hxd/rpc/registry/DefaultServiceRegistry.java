@@ -14,9 +14,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class DefaultServiceRegistry implements ServiceRegistry {
 
-    private final Map<String, Object> serviceMap = new ConcurrentHashMap<>(8);
+    private static final Map<String, Object> serviceMap = new ConcurrentHashMap<>(8);
 
-    private final Set<String> registerService = ConcurrentHashMap.newKeySet();
+    private static final Set<String> registerService = ConcurrentHashMap.newKeySet();
 
     @Override
     public synchronized <T> void registry(T service) {

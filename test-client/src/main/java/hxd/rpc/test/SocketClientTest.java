@@ -9,11 +9,11 @@ import hxd.rpc.transport.RpcClientProxy;
  */
 public class SocketClientTest {
     public static void main(String[] args) {
-        RpcClientProxy clientProxy = new RpcClientProxy("127.0.0.1", 9000);
+        /*RpcClientProxy clientProxy = new SocketClient("127.0.0.1", 9000);
         HelloService helloService = clientProxy.getProxy(HelloService.class);
         HelloObject helloObject = new HelloObject(12, "hello hxd, 123");
         String mes = helloService.hello(helloObject);
-        System.out.println(mes);
+        System.out.println(mes);*/
     }
 
 }
