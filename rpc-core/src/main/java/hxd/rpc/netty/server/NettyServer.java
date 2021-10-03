@@ -4,6 +4,7 @@ import hxd.rpc.RpcServer;
 import hxd.rpc.coder.CommonDecoder;
 import hxd.rpc.coder.CommonEncoder;
 import hxd.rpc.serializer.JsonSerializer;
+import hxd.rpc.serializer.KryoSerializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -44,7 +45,7 @@ public class NettyServer implements RpcServer {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             ChannelPipeline pipeline = socketChannel.pipeline();
                             //编码器
-                            pipeline.addLast(new CommonEncoder(new JsonSerializer()));
+                            pipeline.addLast(new CommonEncoder(new KryoSerializer()));
                             //解码器
                             pipeline.addLast(new CommonDecoder());
                             //数据处理器
