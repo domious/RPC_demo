@@ -2,7 +2,7 @@ package hxd.rpc.netty.server;
 
 import hxd.rpc.entry.RpcRequest;
 import hxd.rpc.entry.RpcResponse;
-import hxd.rpc.handler.RequestHandler;
+import hxd.rpc.RequestHandler;
 import hxd.rpc.registry.DefaultServiceRegistry;
 import hxd.rpc.registry.ServiceRegistry;
 import io.netty.channel.ChannelFuture;

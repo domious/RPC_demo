@@ -3,7 +3,7 @@ package hxd.rpc.test;
 import hxd.rpc.api.HelloService;
 import hxd.rpc.registry.DefaultServiceRegistry;
 import hxd.rpc.registry.ServiceRegistry;
-import hxd.rpc.transport.RpcServer;
+import hxd.rpc.socket.server.SocketServer;
 
 /**
  * @author huxiaodong01
@@ -16,7 +16,7 @@ public class SocketServerTest {
         HelloService helloService = new HelloServiceImpl();
         ServiceRegistry serviceRegistry = new DefaultServiceRegistry();
         serviceRegistry.registry(helloService);
-        RpcServer rpcServer = new RpcServer(serviceRegistry);
+        SocketServer rpcServer = new SocketServer(serviceRegistry);
         rpcServer.start(9000);
 
     }

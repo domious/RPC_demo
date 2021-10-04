@@ -4,7 +4,7 @@ import hxd.rpc.RpcClient;
 import hxd.rpc.api.HelloObject;
 import hxd.rpc.api.HelloService;
 import hxd.rpc.netty.client.NettyClient;
-import hxd.rpc.transport.RpcClientProxy;
+import hxd.rpc.RpcClientProxy;
 
 /**
  * @author huxiaodong

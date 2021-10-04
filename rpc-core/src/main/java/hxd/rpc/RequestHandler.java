@@ -1,4 +1,4 @@
-package hxd.rpc.handler;
+package hxd.rpc;
 
 import hxd.rpc.entry.RpcRequest;
 import hxd.rpc.entry.RpcResponse;
