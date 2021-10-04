@@ -1,16 +1,18 @@
 package hxd.rpc.registry;
 
+import java.net.InetSocketAddress;
+
 /**
  * @author huxiaodong
  */
 public interface ServiceRegistry {
     /**
-     * 服务注册
+     * 把服务注册到nacos
      */
-    <T> void registry(T service);
+    void registry(String serviceName, InetSocketAddress inetSocketAddress);
 
     /**
-     * 获取服务
+     * 从注册中心获取一个服务提供者地址
      */
-    Object getService(String serviceName);
+    InetSocketAddress lookUpService(String serviceName);
 }

@@ -1,7 +1,7 @@
 package hxd.rpc.socket.server;
 
 import hxd.rpc.RequestHandler;
-import hxd.rpc.registry.ServiceRegistry;
+import hxd.rpc.provider.ServiceProvider;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.ServerSocket;
@@ -15,13 +15,13 @@ import java.util.concurrent.*;
 public class SocketServer {
     private final ExecutorService threadPool;
     private RequestHandler requestHandler = new RequestHandler();
-    private final ServiceRegistry serviceRegistry;
+    private final ServiceProvider serviceProvider;
 
     private static final int CORE_POOL_SIZE = 5;
     private static final int MAX_POOL_SIZE = 50;
     private static final long KEEP_ALIVE_TIME = 60;
-    public SocketServer(ServiceRegistry serviceRegistry) {
-        this.serviceRegistry = serviceRegistry;
+    public SocketServer(ServiceProvider serviceProvider) {
+        this.serviceProvider = serviceProvider;
         BlockingQueue<Runnable> workingQueue = new ArrayBlockingQueue<>(100);
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
         threadPool = new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, workingQueue, threadFactory);
@@ -33,7 +33,7 @@ public class SocketServer {
             Socket socket;
             while ((socket = serverSocket.accept()) != null) {
                 log.info("消费端连接，其ip为：{}:{}", socket.getInetAddress(), socket.getPort());
-                threadPool.execute(new RequestHandlerThread(socket, requestHandler, serviceRegistry));
+                threadPool.execute(new RequestHandlerThread(socket, requestHandler, serviceProvider));
             }
             threadPool.shutdown();
         } catch (Exception e) {

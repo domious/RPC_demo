@@ -3,7 +3,7 @@ package hxd.rpc.socket.server;
 import hxd.rpc.entry.RpcRequest;
 import hxd.rpc.entry.RpcResponse;
 import hxd.rpc.RequestHandler;
-import hxd.rpc.registry.ServiceRegistry;
+import hxd.rpc.provider.ServiceProvider;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -20,12 +20,12 @@ public class RequestHandlerThread implements Runnable{
     private Socket socket;
     //需要调用的服务
     private Object service;
-    private ServiceRegistry serviceRegistry;
+    private ServiceProvider serviceProvider;
 
-    public RequestHandlerThread(Socket socket, Object service, ServiceRegistry serviceRegistry) {
+    public RequestHandlerThread(Socket socket, Object service, ServiceProvider serviceProvider) {
         this.socket = socket;
         this.service = service;
-        this.serviceRegistry = serviceRegistry;
+        this.serviceProvider = serviceProvider;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class RequestHandlerThread implements Runnable{
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())) {
             RpcRequest rpcRequest = (RpcRequest) objectInputStream.readObject();
             String interfaceName = rpcRequest.getInterfaceName();
-            Object service = serviceRegistry.getService(interfaceName);
+            Object service = serviceProvider.getService(interfaceName);
             Object result = requestHandler.handle(rpcRequest, service);
             objectOutputStream.writeObject(RpcResponse.success(result));
             objectOutputStream.flush();

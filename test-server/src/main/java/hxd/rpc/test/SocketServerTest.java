@@ -1,8 +1,8 @@
 package hxd.rpc.test;
 
 import hxd.rpc.api.HelloService;
-import hxd.rpc.registry.DefaultServiceRegistry;
-import hxd.rpc.registry.ServiceRegistry;
+import hxd.rpc.provider.ServiceProviderImpl;
+import hxd.rpc.provider.ServiceProvider;
 import hxd.rpc.socket.server.SocketServer;
 
 /**
@@ -14,9 +14,9 @@ public class SocketServerTest {
           创建service，并注册到RpcServer中，指定服务端端口为9000
          */
         HelloService helloService = new HelloServiceImpl();
-        ServiceRegistry serviceRegistry = new DefaultServiceRegistry();
-        serviceRegistry.registry(helloService);
-        SocketServer rpcServer = new SocketServer(serviceRegistry);
+        ServiceProvider serviceProvider = new ServiceProviderImpl();
+        serviceProvider.registry(helloService);
+        SocketServer rpcServer = new SocketServer(serviceProvider);
         rpcServer.start(9000);
 
     }

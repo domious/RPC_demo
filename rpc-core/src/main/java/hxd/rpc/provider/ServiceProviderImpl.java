@@ -1,4 +1,4 @@
-package hxd.rpc.registry;
+package hxd.rpc.provider;
 
 import hxd.rpc.enumCommon.RpcError;
 import hxd.rpc.exception.RpcException;
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author huxiaodong
  */
 @Slf4j
-public class DefaultServiceRegistry implements ServiceRegistry {
+public class ServiceProviderImpl implements ServiceProvider {
 
     private static final Map<String, Object> serviceMap = new ConcurrentHashMap<>(8);
 
