@@ -6,6 +6,9 @@ import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import hxd.rpc.enumCommon.RpcError;
 import hxd.rpc.exception.RpcException;
+import hxd.rpc.loadBalance.LoadBalancer;
+import hxd.rpc.loadBalance.RandomLoadBalancer;
+import hxd.rpc.utils.NacosUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
@@ -19,6 +22,7 @@ public class NacosServiceRegistry implements ServiceRegistry{
 
     private static final String SERVER_ADDR = "8.141.60.147:8848";
     private static final NamingService namingService;
+    private final LoadBalancer loadBalancer;
 
     static {
         try {
@@ -26,6 +30,16 @@ public class NacosServiceRegistry implements ServiceRegistry{
         } catch (NacosException e) {
             log.error("连接到Nacos时有错误发生: ", e);
             throw new RpcException(RpcError.FAILED_TO_CONNECT_TO_SERVICE_REGISTRY);
+        }
+    }
+
+
+
+    public NacosServiceRegistry(LoadBalancer loadBalancer) {
+        if (loadBalancer == null) {
+            this.loadBalancer = new RandomLoadBalancer();
+        }else {
+            this.loadBalancer = loadBalancer;
         }
     }
 
@@ -42,8 +56,8 @@ public class NacosServiceRegistry implements ServiceRegistry{
     @Override
     public InetSocketAddress lookUpService(String serviceName) {
         try {
-            List<Instance> instances = namingService.getAllInstances(serviceName);
-            Instance instance = instances.get(0);
+            List<Instance> instances = NacosUtil.getAllInstance(serviceName);
+            Instance instance = loadBalancer.select(instances);
             return new InetSocketAddress(instance.getIp(), instance.getPort());
         } catch (NacosException e) {
             log.error("获取服务时有错误发生:", e);

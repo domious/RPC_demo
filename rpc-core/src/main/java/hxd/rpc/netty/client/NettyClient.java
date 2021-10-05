@@ -7,6 +7,7 @@ import hxd.rpc.entry.RpcRequest;
 import hxd.rpc.entry.RpcResponse;
 import hxd.rpc.enumCommon.RpcError;
 import hxd.rpc.exception.RpcException;
+import hxd.rpc.loadBalance.RandomLoadBalancer;
 import hxd.rpc.registry.NacosServiceRegistry;
 import hxd.rpc.registry.ServiceRegistry;
 import hxd.rpc.serializer.CommonSerializer;
@@ -34,7 +35,7 @@ public class NettyClient implements RpcClient {
     private final ServiceRegistry serviceRegistry;
 
     public NettyClient() {
-        this.serviceRegistry = new NacosServiceRegistry();
+        this.serviceRegistry = new NacosServiceRegistry(new RandomLoadBalancer());
     }
 
     //配置netty客户端

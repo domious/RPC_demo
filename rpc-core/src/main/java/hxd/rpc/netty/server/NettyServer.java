@@ -5,6 +5,8 @@ import hxd.rpc.coder.CommonDecoder;
 import hxd.rpc.coder.CommonEncoder;
 import hxd.rpc.enumCommon.RpcError;
 import hxd.rpc.exception.RpcException;
+import hxd.rpc.hook.ShutdownHook;
+import hxd.rpc.loadBalance.RandomLoadBalancer;
 import hxd.rpc.provider.ServiceProvider;
 import hxd.rpc.provider.ServiceProviderImpl;
 import hxd.rpc.registry.NacosServiceRegistry;
@@ -41,7 +43,7 @@ public class NettyServer implements RpcServer {
     public NettyServer(String host, int port) {
         this.host = host;
         this.port = port;
-        this.serviceRegistry = new NacosServiceRegistry();
+        this.serviceRegistry = new NacosServiceRegistry(new RandomLoadBalancer());
         this.serviceProvider = new ServiceProviderImpl();
     }
 
@@ -74,7 +76,9 @@ public class NettyServer implements RpcServer {
                             pipeline.addLast(new NettyServerHandler());
                         }
                     });
-            ChannelFuture future = serverBootstrap.bind(port).sync();
+            ChannelFuture future = serverBootstrap.bind(host, port).sync();
+            //注册钩子，再关闭服务端后注销服务
+            ShutdownHook.getShutdownHook().addClearAllHook();
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             log.info("启动服务器有错误：", e);

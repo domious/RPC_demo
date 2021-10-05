@@ -2,8 +2,6 @@ package hxd.rpc.test;
 
 import hxd.rpc.api.HelloService;
 import hxd.rpc.netty.server.NettyServer;
-import hxd.rpc.provider.ServiceProviderImpl;
-import hxd.rpc.provider.ServiceProvider;
 import hxd.rpc.serializer.KryoSerializer;
 
 /**
