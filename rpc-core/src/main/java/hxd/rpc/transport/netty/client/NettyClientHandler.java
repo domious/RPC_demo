@@ -1,4 +1,4 @@
-package hxd.rpc.netty.client;
+package hxd.rpc.transport.netty.client;
 
 import hxd.rpc.entry.RpcResponse;
 import io.netty.channel.ChannelHandlerContext;

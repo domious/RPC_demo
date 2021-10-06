@@ -1,6 +1,7 @@
-package hxd.rpc.netty.server;
+package hxd.rpc.transport.netty.server;
 
-import hxd.rpc.RpcServer;
+import hxd.rpc.transport.AbstractRpcServer;
+import hxd.rpc.transport.RpcServer;
 import hxd.rpc.coder.CommonDecoder;
 import hxd.rpc.coder.CommonEncoder;
 import hxd.rpc.enumCommon.RpcError;
@@ -31,20 +32,22 @@ import java.net.InetSocketAddress;
  * @author huxiaodong
  */
 @Slf4j
-public class NettyServer implements RpcServer {
+public class NettyServer extends AbstractRpcServer {
 
-    private final String host;
-    private final int port;
-    private final ServiceRegistry serviceRegistry;
-    private final ServiceProvider serviceProvider;
+
     private CommonSerializer serializer;
 
-
     public NettyServer(String host, int port) {
+        this(host, port, DEFAULT_SERIALIZER);
+    }
+
+    public NettyServer(String host, int port, Integer serializer) {
         this.host = host;
         this.port = port;
         this.serviceRegistry = new NacosServiceRegistry(new RandomLoadBalancer());
         this.serviceProvider = new ServiceProviderImpl();
+        this.serializer = CommonSerializer.getByCode(serializer);
+        serviceScan();
     }
 
     /**
@@ -88,21 +91,7 @@ public class NettyServer implements RpcServer {
         }
     }
 
-    /**
-     * publishService把服务保存到本地注册表中，并注册到nacos上
-     */
-    @Override
-    public <T> void publishService(Object service, Class<T> serviceClass) {
-        if (serializer == null) {
-            log.error("未设置序列化器");
-            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
-        }
-        serviceProvider.registry(service);
-        serviceRegistry.registry(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
-        start();
-    }
 
-    public void setSerializer(CommonSerializer serializer) {
-        this.serializer = serializer;
-    }
+
+
 }

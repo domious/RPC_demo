@@ -7,7 +7,7 @@ public interface ServiceProvider {
     /**
      * 服务注册
      */
-    <T> void registry(T service);
+    <T> void registry(T service, String serviceName);
 
     /**
      * 获取服务

@@ -1,4 +1,4 @@
-package hxd.rpc;
+package hxd.rpc.transport;
 
 import hxd.rpc.entry.RpcRequest;
 import hxd.rpc.serializer.CommonSerializer;
@@ -8,5 +8,5 @@ import hxd.rpc.serializer.CommonSerializer;
  */
 public interface RpcClient {
     Object sendRequest(RpcRequest rpcRequest);
-    void setSerializer(CommonSerializer serializer);
+    int DEFAULT_SERIALIZER = CommonSerializer.KRYO_SERIALIZER;
 }

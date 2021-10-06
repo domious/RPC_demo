@@ -1,8 +1,8 @@
-package hxd.rpc.netty.server;
+package hxd.rpc.transport.netty.server;
 
 import hxd.rpc.entry.RpcRequest;
 import hxd.rpc.entry.RpcResponse;
-import hxd.rpc.RequestHandler;
+import hxd.rpc.handler.RequestHandler;
 import hxd.rpc.provider.ServiceProviderImpl;
 import hxd.rpc.provider.ServiceProvider;
 import io.netty.channel.ChannelFuture;
@@ -28,8 +28,8 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcRequest> 
             log.info("服务器接收到请求: {}", msg);
             String interfaceName = msg.getInterfaceName();
             Object service = SERVICE_PROVIDER.getService(interfaceName);
-            Object result = requestHandler.handle(msg, service);
-            ChannelFuture future = ctx.writeAndFlush(RpcResponse.success(result));
+            Object result = requestHandler.handle(msg);
+            ChannelFuture future = ctx.writeAndFlush(RpcResponse.success(result, msg.getRequestId()));
             future.addListener(ChannelFutureListener.CLOSE);
         } finally {
             ReferenceCountUtil.release(msg);

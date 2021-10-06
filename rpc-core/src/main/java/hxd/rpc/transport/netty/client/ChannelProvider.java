@@ -1,4 +1,4 @@
-package hxd.rpc.netty.client;
+package hxd.rpc.transport.netty.client;
 
 import hxd.rpc.coder.CommonDecoder;
 import hxd.rpc.coder.CommonEncoder;
